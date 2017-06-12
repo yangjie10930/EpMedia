@@ -93,11 +93,11 @@ public class EpEditor {
 
 		//输出选项
 		cmd.append(outputOption.getOutputInfo());
-		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
-			cmd.append(" -vcodec copy -acodec copy");
-		}else{
-			cmd.append(" -vcodec libx264 -acodec copy");
-		}
+//		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
+//			cmd.append(" -vcodec copy -acodec copy");
+//		}else{
+//			cmd.append(" -vcodec libx264 -acodec copy");
+//		}
 		cmd.append(" ").append(outputOption.outPath);
 		//执行命令
 		execCmd(cmd.toString(), onEditorListener);
