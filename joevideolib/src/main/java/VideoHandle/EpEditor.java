@@ -50,7 +50,7 @@ public class EpEditor {
 				}
 				cmd.append(" -i ").append(epDraws.get(i).getPicPath());
 			}
-			cmd.append(" -filter_complex [0:0]").append(epVideo.getFilters() != null ? epVideo.getFilters() + "," : "")
+			cmd.append(" -filter_complex [0:v]").append(epVideo.getFilters() != null ? epVideo.getFilters() + "," : "")
 					.append("scale=").append(outputOption.width == 0 ? "iw" : outputOption.width).append(":")
 					.append(outputOption.height == 0 ? "ih" : outputOption.height)
 					.append(outputOption.width == 0 ? "" : ",setdar=" + outputOption.getSar()).append("[outv0];");
@@ -95,6 +95,8 @@ public class EpEditor {
 		cmd.append(outputOption.getOutputInfo());
 		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
 			cmd.append(" -vcodec copy -acodec copy");
+		}else{
+			cmd.append(" -vcodec libx264 -acodec copy");
 		}
 		cmd.append(" ").append(outputOption.outPath);
 		//执行命令
@@ -188,7 +190,7 @@ public class EpEditor {
 		String appDir = context.getFilesDir().getAbsolutePath() + "/EpVideos/";
 		String fileName = "ffmpeg_concat.txt";
 		List<String> videos = new ArrayList<>();
-		for (EpVideo e:epVideos) {
+		for (EpVideo e : epVideos) {
 			videos.add(e.getVideoPath());
 		}
 		FileUtils.writeTxtToFile(videos, appDir, fileName);
@@ -217,12 +219,19 @@ public class EpEditor {
 	 * 输出选项设置
 	 */
 	public static class OutputOption {
+		public static final int ONE_TO_ONE = 1;// 1:1
+		public static final int FOUR_TO_THREE = 2;// 4:3
+		public static final int SIXTEEN_TO_NINE = 3;// 16:9
+		public static final int NINE_TO_SIXTEEN = 4;// 9:16
+		public static final int THREE_TO_FOUR = 5;// 3:4
+
 		String outPath;//输出路径
 		public int frameRate = 0;//帧率
 		public int bitRate = 0;//比特率(一般设置10M)
 		public String outFormat = "";//输出格式(目前暂时只支持mp4,x264,mp3,gif)
-		public int width = 0;//输出宽度
-		public int height = 0;//输出高度
+		private int width = 0;//输出宽度
+		private int height = 0;//输出高度
+		private int sar = 6;//输出宽高比
 
 		public OutputOption(String outPath) {
 			this.outPath = outPath;
@@ -235,21 +244,31 @@ public class EpEditor {
 		 */
 		public String getSar() {
 			String res;
-			float sar = (float) width / height;
-			if (sar == (float) 16 / 9) {
-				res = "16:9";
-			} else if (sar == (float) 9 / 16) {
-				res = "9:16";
-			} else if (sar == (float) 4 / 3) {
-				res = "4:3";
-			} else if (sar == (float) 3 / 4) {
-				res = "3:4";
-			} else if (sar == 1.0f) {
-				res = "1:1";
-			} else {
-				res = width + ":" + height;
+			switch (sar) {
+				case ONE_TO_ONE:
+					res = "1/1";
+					break;
+				case FOUR_TO_THREE:
+					res = "4/3";
+					break;
+				case THREE_TO_FOUR:
+					res = "3/4";
+					break;
+				case SIXTEEN_TO_NINE:
+					res = "16/9";
+					break;
+				case NINE_TO_SIXTEEN:
+					res = "9/16";
+					break;
+				default:
+					res = width + "/" + height;
+					break;
 			}
 			return res;
+		}
+
+		public void setSar(int sar) {
+			this.sar = sar;
 		}
 
 		/**
@@ -269,6 +288,26 @@ public class EpEditor {
 				res.append(" -f ").append(outFormat);
 			}
 			return res.toString();
+		}
+
+		/**
+		 * 设置宽度
+		 *
+		 * @param width
+		 */
+		public void setWidth(int width) {
+			if (width % 2 != 0) width -= 1;
+			this.width = width;
+		}
+
+		/**
+		 * 设置高度
+		 *
+		 * @param height
+		 */
+		public void setHeight(int height) {
+			if (height % 2 != 0) height -= 1;
+			this.height = height;
 		}
 	}
 

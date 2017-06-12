@@ -22,6 +22,9 @@ public class EpVideo {
 	//特效
 	private ArrayList<EpDraw> epPics;
 
+	//裁剪
+	private Crop mCrop;
+
 
 	public EpVideo(String videoPath) {
 		this.videoPath = videoPath;
@@ -39,9 +42,10 @@ public class EpVideo {
 
 	/**
 	 * 获取滤镜效果
+	 *
 	 * @return
 	 */
-	public StringBuilder getFilters(){
+	public StringBuilder getFilters() {
 		return filter;
 	}
 
@@ -147,8 +151,17 @@ public class EpVideo {
 	 */
 	public EpVideo crop(float width, float height, float x, float y) {
 		filter = getFilter();
+		mCrop = new Crop(width,height,x,y);
 		filter.append("crop=" + width + ":" + height + ":" + x + ":" + y);
 		return this;
+	}
+
+	/**
+	 * 获取裁剪信息
+	 * @return
+	 */
+	public Crop getCrop(){
+		return mCrop;
 	}
 
 	/**
@@ -161,7 +174,7 @@ public class EpVideo {
 	 * @param ttf   文字字体的路径
 	 * @param text  添加的文字
 	 */
-	public EpVideo addText(int x, int y, int size, String color, String ttf, String text) {
+	public EpVideo addText(int x, int y, float size, String color, String ttf, String text) {
 		filter = getFilter();
 		filter.append("drawtext=fontfile=" + ttf + ":fontsize=" + size + ":fontcolor=" + color + ":x=" + x + ":y=" + y + ":text='" + text + "'");
 		return this;
@@ -173,7 +186,7 @@ public class EpVideo {
 	 * @param ofi 命令符
 	 * @return
 	 */
-	public EpVideo addFilter(String ofi){
+	public EpVideo addFilter(String ofi) {
 		filter = getFilter();
 		filter.append(ofi);
 		return this;
@@ -185,17 +198,50 @@ public class EpVideo {
 	 * @param epDraw 添加的图片类
 	 * @return
 	 */
-	public EpVideo addDraw(EpDraw epDraw){
+	public EpVideo addDraw(EpDraw epDraw) {
 		epPics.add(epDraw);
 		return this;
 	}
 
 	/**
 	 * 获取添加的图片类
+	 *
 	 * @return
 	 */
-	public ArrayList<EpDraw> getEpDraws(){
+	public ArrayList<EpDraw> getEpDraws() {
 		return epPics;
 	}
 
+	/**
+	 * 裁剪信息类
+	 */
+	public class Crop {
+		float width;
+		float height;
+		float x;
+		float y;
+
+		public Crop(float width, float height, float x, float y) {
+			this.width = width;
+			this.height = height;
+			this.x = x;
+			this.y = y;
+		}
+
+		public float getWidth() {
+			return width;
+		}
+
+		public float getHeight() {
+			return height;
+		}
+
+		public float getX() {
+			return x;
+		}
+
+		public float getY() {
+			return y;
+		}
+	}
 }
