@@ -93,11 +93,9 @@ public class EpEditor {
 
 		//输出选项
 		cmd.append(outputOption.getOutputInfo());
-//		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
-//			cmd.append(" -vcodec copy -acodec copy");
-//		}else{
-//			cmd.append(" -vcodec libx264 -acodec copy");
-//		}
+		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
+			cmd.append(" -vcodec copy -acodec copy");
+		}
 		cmd.append(" ").append(outputOption.outPath);
 		//执行命令
 		execCmd(cmd.toString(), onEditorListener);
@@ -210,7 +208,6 @@ public class EpEditor {
 	 */
 	public void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
 		String cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
-		Log.v("addText", cmd);
 		execCmd(cmd, onEditorListener);
 	}
 
