@@ -108,3 +108,22 @@ epEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	}
 });
 ```
+* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同)
+```Java
+ArrayList<EpVideo> epVideos = new ArrayList<>();
+epVideos.add(new EpVideo(url));//视频1
+epVideos.add(new EpVideo(url2));//视频2
+epVideos.add(new EpVideo(url3));//视频3
+EpEditor epEditor = new EpEditor(this);
+epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorListener() {
+		@Override
+		public void onSuccess() {
+
+		}
+
+		@Override
+		public void onFailure() {
+
+		}
+});
+```
