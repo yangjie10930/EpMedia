@@ -3,9 +3,18 @@
 
 目前还在完善和修复一些bug,如果使用中遇到问题请联系我:691345435@qq.com。
 ## 使用方法:
+* build.gradle里添加:
+```Java
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.1'
+compile 'com.github.yangjie10930:EpMedia:v0.2'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
