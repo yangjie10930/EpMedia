@@ -1,11 +1,20 @@
 # EpMedia
 基于FFmpeg开发的视频处理框架，简单易用，帮助新手快速使用视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，转码，添加LOGO，添加滤镜，添加背景音乐。</br>
 
-目前还在完善和修复一些bug,如果使用中遇到问题请联系我qq:691345435。
+目前还在完善和修复一些bug,如果使用中遇到问题请联系我:691345435@qq.com。
 ## 使用方法:
+* build.gradle里添加:
+```Java
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.1'
+compile 'com.github.yangjie10930:EpMedia:v0.2'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -106,5 +115,24 @@ epEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	public void onFailure() {
 
 	}
+});
+```
+* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同)
+```Java
+ArrayList<EpVideo> epVideos = new ArrayList<>();
+epVideos.add(new EpVideo(url));//视频1
+epVideos.add(new EpVideo(url2));//视频2
+epVideos.add(new EpVideo(url3));//视频3
+EpEditor epEditor = new EpEditor(this);
+epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorListener() {
+		@Override
+		public void onSuccess() {
+
+		}
+
+		@Override
+		public void onFailure() {
+
+		}
 });
 ```
