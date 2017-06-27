@@ -181,6 +181,36 @@ public class EpVideo {
 	}
 
 	/**
+	 * 为视频添加时间
+	 *
+	 * @param size  文字大小
+	 * @param color 文字颜色(white,black,blue,red...)
+	 * @param x     文字的x坐标
+	 * @param y     文字的y坐标
+	 * @param ttf   文字字体的路径
+	 * @param type  时间类型(1==>hh:mm:ss,2==>yyyy-MM-dd hh:mm:ss,3==>yyyy年MM月dd日 hh时mm分ss秒)
+	 */
+	public EpVideo addTime(int x, int y, float size, String color, String ttf,int type){
+		long time=System.currentTimeMillis()/1000;
+		String  str=String.valueOf(time);
+		filter = getFilter();
+		String ts = "";
+		switch (type){
+			case 1:
+				ts = "%{pts\\:localtime\\:" + str + "\\:%H\\\\\\:%M\\\\\\:%S}";
+				break;
+			case 2:
+				ts = "%{pts\\:localtime\\:" + str + "}";
+				break;
+			case 3:
+				ts = "%{pts\\:localtime\\:" + str + "\\:%Y\\\\年%m\\\\月%d\\\\日\n%H\\\\\\时%M\\\\\\分%S秒}";
+				break;
+		}
+		filter.append("drawtext=fontfile=" + ttf + ":fontsize=" + size + ":fontcolor=" + color + ":x=" + x + ":y=" + y + ":text='"+ts+"'");
+		return this;
+	}
+
+	/**
 	 * 添加自定义滤镜效果
 	 *
 	 * @param ofi 命令符

@@ -95,6 +95,8 @@ public class EpEditor {
 		cmd.append(outputOption.getOutputInfo());
 		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
 			cmd.append(" -vcodec copy -acodec copy");
+		}else{
+			cmd.append(" -preset superfast");
 		}
 		cmd.append(" ").append(outputOption.outPath);
 		//执行命令
@@ -167,7 +169,7 @@ public class EpEditor {
 				cmd.append("[").append(i).append(":a]");
 			}
 			cmd.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa] -map [outv] -map [outa]")
-					.append(outputOption.getOutputInfo()).append(" ").append(outputOption.outPath);
+					.append(outputOption.getOutputInfo()).append(" -preset superfast ").append(outputOption.outPath);
 			//执行命令
 			execCmd(cmd.toString(), onEditorListener);
 		} else {
