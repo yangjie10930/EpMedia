@@ -22,6 +22,10 @@ public class EpEditor {
 
 	private Context context;
 
+	public enum Format{
+		MP3,MP4
+	}
+
 	public EpEditor(Context context) {
 		this.context = context;
 	}
@@ -210,6 +214,28 @@ public class EpEditor {
 	 */
 	public void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
 		String cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
+		execCmd(cmd, onEditorListener);
+	}
+
+	/**
+	 * 音视频分离
+	 *
+	 * @param videoin				视频文件
+	 * @param out					输出文件路径
+	 * @param format				输出类型
+	 * @param onEditorListener   	回调监听
+	 */
+	public void demuxer(String videoin,String out,Format format,OnEditorListener onEditorListener){
+		String cmd = "-y -i "+videoin;
+		switch (format){
+			case MP3:
+				cmd += " -vn -acodec libmp3lame ";
+				break;
+			case MP4:
+				cmd += " -vcodec copy -an ";
+				break;
+		}
+		cmd += out;
 		execCmd(cmd, onEditorListener);
 	}
 

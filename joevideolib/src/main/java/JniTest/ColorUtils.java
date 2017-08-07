@@ -15,6 +15,4 @@ public class ColorUtils {
 	}
 
 	public static native byte[] rgb2yuvfloat(byte[] rgbs, int size, int width, int height);
-//	public static native byte[] rgb2yuvint(byte[] rgbs,int width,int height);
-//	public static native byte[] rgb2yuvtlb(byte[] rgbs,int width,int height);
 }

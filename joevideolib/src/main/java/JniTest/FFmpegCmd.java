@@ -1,7 +1,7 @@
 package JniTest;
 
 /**
- * Created by Administrator on 2017/2/14.
+ * Created by 杨杰 on 2017/2/14.
  */
 
 public class FFmpegCmd {
