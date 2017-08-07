@@ -14,7 +14,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.3'
+compile 'com.github.yangjie10930:EpMedia:v0.4'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
