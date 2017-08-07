@@ -93,6 +93,22 @@ epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener()
 			}
 });
 ```
+* 分离音视频
+```Java
+EpEditor epEditor = new EpEditor(this);
+//参数分别是视频路径，输出路径，输出类型
+epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListener() {
+			@Override
+			public void onSuccess() {
+				
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+});
+```
 ## 多个视频处理&合并
 * 合并视频
 ```Java
