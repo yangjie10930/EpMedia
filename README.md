@@ -14,7 +14,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.3'
+compile 'com.github.yangjie10930:EpMedia:v0.4'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -82,6 +82,22 @@ epEditor.exec(epVideo, outputOption, new OnEditorListener() {
 EpEditor epEditor = new EpEditor(this);
 //参数分别是视频路径，音频路径，输出路径,原始视频音量(1为100%,0.7为70%,以此类推),添加音频音量
 epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener() {
+			@Override
+			public void onSuccess() {
+				
+			}
+
+			@Override
+			public void onFailure() {
+
+			}
+});
+```
+* 分离音视频
+```Java
+EpEditor epEditor = new EpEditor(this);
+//参数分别是视频路径，输出路径，输出类型
+epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListener() {
 			@Override
 			public void onSuccess() {
 				
