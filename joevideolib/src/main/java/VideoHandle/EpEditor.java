@@ -22,8 +22,8 @@ public class EpEditor {
 
 	private Context context;
 
-	public enum Format{
-		MP3,MP4
+	public enum Format {
+		MP3, MP4
 	}
 
 	public EpEditor(Context context) {
@@ -35,7 +35,6 @@ public class EpEditor {
 	 *
 	 * @param epVideo      需要处理的视频
 	 * @param outputOption 输出选项配置
-	 * @return
 	 */
 	public void exec(EpVideo epVideo, OutputOption outputOption, OnEditorListener onEditorListener) {
 		boolean isFilter = false;
@@ -43,7 +42,7 @@ public class EpEditor {
 		//开始处理
 		StringBuilder cmd = new StringBuilder("-y");
 		if (epVideo.getVideoClip()) {
-			cmd.append(" -ss ").append(epVideo.getClipStart()).append(" -t ").append(epVideo.getClipDuration());
+			cmd.append(" -ss ").append(epVideo.getClipStart()).append(" -t ").append(epVideo.getClipDuration()).append(" -accurate_seek");
 		}
 		cmd.append(" -i ").append(epVideo.getVideoPath());
 		//添加图片或者动图
@@ -99,7 +98,7 @@ public class EpEditor {
 		cmd.append(outputOption.getOutputInfo());
 		if (!isFilter && outputOption.getOutputInfo().isEmpty()) {
 			cmd.append(" -vcodec copy -acodec copy");
-		}else{
+		} else {
 			cmd.append(" -preset superfast");
 		}
 		cmd.append(" ").append(outputOption.outPath);
@@ -123,7 +122,7 @@ public class EpEditor {
 			//添加输入标示
 			for (EpVideo e : epVideos) {
 				if (e.getVideoClip()) {
-					cmd.append(" -ss ").append(e.getClipStart()).append(" -t ").append(e.getClipDuration());
+					cmd.append(" -ss ").append(e.getClipStart()).append(" -t ").append(e.getClipDuration()).append(" -accurate_seek");
 				}
 				cmd.append(" -i ").append(e.getVideoPath());
 			}
@@ -220,14 +219,14 @@ public class EpEditor {
 	/**
 	 * 音视频分离
 	 *
-	 * @param videoin				视频文件
-	 * @param out					输出文件路径
-	 * @param format				输出类型
-	 * @param onEditorListener   	回调监听
+	 * @param videoin          视频文件
+	 * @param out              输出文件路径
+	 * @param format           输出类型
+	 * @param onEditorListener 回调监听
 	 */
-	public void demuxer(String videoin,String out,Format format,OnEditorListener onEditorListener){
-		String cmd = "-y -i "+videoin;
-		switch (format){
+	public void demuxer(String videoin, String out, Format format, OnEditorListener onEditorListener) {
+		String cmd = "-y -i " + videoin;
+		switch (format) {
 			case MP3:
 				cmd += " -vn -acodec libmp3lame ";
 				break;
@@ -244,11 +243,11 @@ public class EpEditor {
 	 * 输出选项设置
 	 */
 	public static class OutputOption {
-		public static final int ONE_TO_ONE = 1;// 1:1
-		public static final int FOUR_TO_THREE = 2;// 4:3
-		public static final int SIXTEEN_TO_NINE = 3;// 16:9
-		public static final int NINE_TO_SIXTEEN = 4;// 9:16
-		public static final int THREE_TO_FOUR = 5;// 3:4
+		static final int ONE_TO_ONE = 1;// 1:1
+		static final int FOUR_TO_THREE = 2;// 4:3
+		static final int SIXTEEN_TO_NINE = 3;// 16:9
+		static final int NINE_TO_SIXTEEN = 4;// 9:16
+		static final int THREE_TO_FOUR = 5;// 3:4
 
 		String outPath;//输出路径
 		public int frameRate = 0;//帧率
@@ -265,7 +264,7 @@ public class EpEditor {
 		/**
 		 * 获取宽高比
 		 *
-		 * @return
+		 * @return 1
 		 */
 		public String getSar() {
 			String res;
@@ -299,7 +298,7 @@ public class EpEditor {
 		/**
 		 * 获取输出信息
 		 *
-		 * @return
+		 * @return 1
 		 */
 		String getOutputInfo() {
 			StringBuilder res = new StringBuilder();
@@ -318,7 +317,7 @@ public class EpEditor {
 		/**
 		 * 设置宽度
 		 *
-		 * @param width
+		 * @param width 宽
 		 */
 		public void setWidth(int width) {
 			if (width % 2 != 0) width -= 1;
@@ -328,7 +327,7 @@ public class EpEditor {
 		/**
 		 * 设置高度
 		 *
-		 * @param height
+		 * @param height 高
 		 */
 		public void setHeight(int height) {
 			if (height % 2 != 0) height -= 1;
