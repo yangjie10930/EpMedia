@@ -110,7 +110,7 @@ epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListene
 });
 ```
 ## 多个视频处理&合并
-* 合并视频
+* 合并视频（支持对要合并的视频进行其他处理操作）
 ```Java
 ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
@@ -135,7 +135,7 @@ epEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	}
 });
 ```
-* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同)
+* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同，不支持对要合并的视频进行其他处理操作)
 ```Java
 ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
