@@ -2,6 +2,8 @@
 基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐。</br>
 
 目前还在完善和修复一些bug,如果使用中遇到问题请联系我:yangjie10930@sina.cn。
+
+<a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
 ## 使用方法:
 * build.gradle里添加:
 ```Java
