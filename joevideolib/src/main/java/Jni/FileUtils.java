@@ -1,4 +1,4 @@
-package JniTest;
+package Jni;
 
 import android.util.Log;
 

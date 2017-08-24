@@ -1,4 +1,4 @@
-package JniTest;
+package Jni;
 
 /**
  * Created by 杨杰 on 2017/2/14.

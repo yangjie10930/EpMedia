@@ -7,8 +7,8 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-import JniTest.FFmpegCmd;
-import JniTest.FileUtils;
+import Jni.FFmpegCmd;
+import Jni.FileUtils;
 
 /**
  * 视频编辑器
