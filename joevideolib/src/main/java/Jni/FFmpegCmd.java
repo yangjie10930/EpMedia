@@ -1,5 +1,7 @@
 package Jni;
 
+import VideoHandle.OnEditorListener;
+
 /**
  * Created by 杨杰 on 2017/2/14.
  */
@@ -19,10 +21,12 @@ public class FFmpegCmd {
 		System.loadLibrary("ffmpeg");
 	}
 
-	private static OnExecListener listener;
+	private static OnEditorListener listener;
+	private static long duration;
 
 	/**
 	 * 调用底层执行
+	 *
 	 * @param argc
 	 * @param argv
 	 * @return
@@ -31,24 +35,34 @@ public class FFmpegCmd {
 
 	public static void onExecuted(int ret) {
 		if (listener != null) {
-			listener.onExecuted(ret);
+			if (ret == 0) {
+				listener.onProgress(1);
+				listener.onSuccess();
+			} else {
+				listener.onFailure();
+			}
+		}
+
+	}
+
+	public static void onProgress(float progress) {
+		if (listener != null) {
+			if (duration != 0) {
+				listener.onProgress(progress / (duration / 1000000) * 0.95f);
+			}
 		}
 	}
 
+
 	/**
 	 * 执行ffmoeg命令
+	 *
 	 * @param cmds
 	 * @param listener
 	 */
-	public static void exec(String[] cmds, OnExecListener listener) {
+	public static void exec(String[] cmds, long duration, OnEditorListener listener) {
 		FFmpegCmd.listener = listener;
+		FFmpegCmd.duration = duration;
 		exec(cmds.length, cmds);
-	}
-
-	/**
-	 * 执行完成/错误 时的回调接口
-	 */
-	public interface OnExecListener {
-		void onExecuted(int ret);
 	}
 }

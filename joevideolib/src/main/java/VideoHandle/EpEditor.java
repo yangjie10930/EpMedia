@@ -9,6 +9,7 @@ import java.util.List;
 
 import Jni.FFmpegCmd;
 import Jni.FileUtils;
+import Jni.VideoUitls;
 
 /**
  * 视频编辑器
@@ -102,8 +103,9 @@ public class EpEditor {
 			cmd.append(" -preset superfast");
 		}
 		cmd.append(" ").append(outputOption.outPath);
+		long duration = VideoUitls.getDuration(epVideo.getVideoPath());
 		//执行命令
-		execCmd(cmd.toString(), onEditorListener);
+		execCmd(cmd.toString(), duration, onEditorListener);
 	}
 
 	/**
@@ -173,8 +175,17 @@ public class EpEditor {
 			}
 			cmd.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa] -map [outv] -map [outa]")
 					.append(outputOption.getOutputInfo()).append(" -preset superfast ").append(outputOption.outPath);
+			long duration = 0;
+			for (EpVideo ep : epVideos) {
+				long d = VideoUitls.getDuration(ep.getVideoPath());
+				if (d != 0) {
+					duration += d;
+				}else{
+					break;
+				}
+			}
 			//执行命令
-			execCmd(cmd.toString(), onEditorListener);
+			execCmd(cmd.toString(),duration, onEditorListener);
 		} else {
 			throw new RuntimeException("Need more than one video");
 		}
@@ -198,7 +209,16 @@ public class EpEditor {
 		}
 		FileUtils.writeTxtToFile(videos, appDir, fileName);
 		String cmd = "-y -f concat -safe 0 -i " + appDir + fileName + " -c copy " + outputOption.outPath;
-		execCmd(cmd, onEditorListener);
+		long duration = 0;
+		for (EpVideo ep : epVideos) {
+			long d = VideoUitls.getDuration(ep.getVideoPath());
+			if (d != 0) {
+				duration += d;
+			}else{
+				break;
+			}
+		}
+		execCmd(cmd,duration, onEditorListener);
 	}
 
 	/**
@@ -213,7 +233,7 @@ public class EpEditor {
 	 */
 	public void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
 		String cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
-		execCmd(cmd, onEditorListener);
+		execCmd(cmd, 0, onEditorListener);
 	}
 
 	/**
@@ -235,7 +255,7 @@ public class EpEditor {
 				break;
 		}
 		cmd += out;
-		execCmd(cmd, onEditorListener);
+		execCmd(cmd, 0, onEditorListener);
 	}
 
 
@@ -340,21 +360,37 @@ public class EpEditor {
 	 *
 	 * @param cmd 命令
 	 */
-	public void execCmd(String cmd, final OnEditorListener onEditorListener) {
+	public void execCmd(String cmd, long duration, final OnEditorListener onEditorListener) {
 		Log.v("ffmpeg", "cmd:" + cmd);
 		cmd = "ffmpeg " + cmd;
 		String[] cmds = cmd.split(" ");
-		FFmpegCmd.exec(cmds, new FFmpegCmd.OnExecListener() {
+		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
 			@Override
-			public void onExecuted(final int ret) {
+			public void onSuccess() {
 				((Activity) context).runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-						if (ret == 0) {
-							onEditorListener.onSuccess();
-						} else {
-							onEditorListener.onFailure();
-						}
+						onEditorListener.onSuccess();
+					}
+				});
+			}
+
+			@Override
+			public void onFailure() {
+				((Activity) context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						onEditorListener.onFailure();
+					}
+				});
+			}
+
+			@Override
+			public void onProgress(final float progress) {
+				((Activity) context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						onEditorListener.onProgress(progress);
 					}
 				});
 			}
