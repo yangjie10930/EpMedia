@@ -55,6 +55,7 @@ epVideo.addDraw(epDraw);
 * 添加自定义滤镜
 ```Java
 //自定义滤镜，ffmpeg命令支持的滤镜都支持
+//详细效果可参考：http://blog.csdn.net/u012027644/article/details/77833484
 //具体内容参见ffmpeg filter官网：http://www.ffmpeg.org/ffmpeg-filters.html
 //举例 String filter = "lutyuv=y=maxval+minval-val:u=maxval+minval-val:v=maxval+minval-val";//底片效果
 epVideo.addFilter(filter);
