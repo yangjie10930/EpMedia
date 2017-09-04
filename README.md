@@ -16,7 +16,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.4'
+compile 'com.github.yangjie10930:EpMedia:v0.6'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -77,6 +77,11 @@ epEditor.exec(epVideo, outputOption, new OnEditorListener() {
 			public void onFailure() {
 
 			}
+			
+			@Override
+			public void onProgress(float progress) {
+				//这里获取处理进度
+			}
 });
 ```
 * 添加背景音乐
@@ -93,6 +98,11 @@ epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener()
 			public void onFailure() {
 
 			}
+			
+			@Override
+			public void onProgress(float progress) {
+				//这里获取处理进度
+			}
 });
 ```
 * 分离音视频
@@ -108,6 +118,11 @@ epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListene
 			@Override
 			public void onFailure() {
 
+			}
+			
+			@Override
+			public void onProgress(float progress) {
+				//这里获取处理进度
 			}
 });
 ```
@@ -135,9 +150,14 @@ epEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	public void onFailure() {
 
 	}
+	
+	@Override
+	public void onProgress(float progress) {
+		//这里获取处理进度
+	}
 });
 ```
-* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同，不支持对要合并的视频进行其他处理操作)
+* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同，不支持对要合并的视频进行其他处理操作，该方法合并速度很快)
 ```Java
 ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
@@ -153,6 +173,11 @@ epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorLis
 		@Override
 		public void onFailure() {
 
+		}
+		
+		@Override
+		public void onProgress(float progress) {
+				//这里获取处理进度
 		}
 });
 ```
