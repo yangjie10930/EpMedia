@@ -160,7 +160,7 @@ epEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	}
 });
 ```
-* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同，不支持对要合并的视频进行其他处理操作，该方法合并速度很快)
+* 无损合并视频(对视频格式严格，需要分辨率，帧率，码率都相同，不支持对要合并的视频进行其他处理操作，该方法合并速度很快，另：两段同格式的音频拼接也可使用该方法)
 ```Java
 ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
