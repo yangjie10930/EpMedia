@@ -2,13 +2,17 @@ package VideoHandle;
 
 import android.app.Activity;
 import android.content.Context;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import Jni.FFmpegCmd;
 import Jni.FileUtils;
+import Jni.TrackUtils;
 import Jni.VideoUitls;
 
 /**
@@ -180,12 +184,12 @@ public class EpEditor {
 				long d = VideoUitls.getDuration(ep.getVideoPath());
 				if (d != 0) {
 					duration += d;
-				}else{
+				} else {
 					break;
 				}
 			}
 			//执行命令
-			execCmd(cmd.toString(),duration, onEditorListener);
+			execCmd(cmd.toString(), duration, onEditorListener);
 		} else {
 			throw new RuntimeException("Need more than one video");
 		}
@@ -214,11 +218,11 @@ public class EpEditor {
 			long d = VideoUitls.getDuration(ep.getVideoPath());
 			if (d != 0) {
 				duration += d;
-			}else{
+			} else {
 				break;
 			}
 		}
-		execCmd(cmd,duration, onEditorListener);
+		execCmd(cmd, duration, onEditorListener);
 	}
 
 	/**
@@ -232,7 +236,22 @@ public class EpEditor {
 	 * @param onEditorListener 回调监听
 	 */
 	public void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
-		String cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
+		MediaExtractor mediaExtractor = new MediaExtractor();
+		try {
+			mediaExtractor.setDataSource(videoin);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		int at = TrackUtils.selectAudioTrack(mediaExtractor);
+		String cmd;
+		if (at == -1) {
+			int vt = TrackUtils.selectVideoTrack(mediaExtractor);
+			float duration = (float) mediaExtractor.getTrackFormat(vt).getLong(MediaFormat.KEY_DURATION) / 1000 / 1000;
+			cmd = "-y -i " + videoin + " -ss 0 -t " + duration + " -i " + audioin + " -acodec copy -vcodec copy " + output;
+		} else {
+			cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
+		}
 		execCmd(cmd, 0, onEditorListener);
 	}
 
