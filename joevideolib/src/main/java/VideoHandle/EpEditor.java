@@ -108,6 +108,10 @@ public class EpEditor {
 		}
 		cmd.append(" ").append(outputOption.outPath);
 		long duration = VideoUitls.getDuration(epVideo.getVideoPath());
+		if (epVideo.getVideoClip()) {
+			long clipTime = (long) ((epVideo.getClipDuration() - epVideo.getClipStart()) * 1000000);
+			duration = clipTime < duration ? clipTime : duration;
+		}
 		//执行命令
 		execCmd(cmd.toString(), duration, onEditorListener);
 	}
@@ -182,6 +186,10 @@ public class EpEditor {
 			long duration = 0;
 			for (EpVideo ep : epVideos) {
 				long d = VideoUitls.getDuration(ep.getVideoPath());
+				if (ep.getVideoClip()) {
+					long clipTime = (long) ((ep.getClipDuration() - ep.getClipStart()) * 1000000);
+					d = clipTime < d ? clipTime : d;
+				}
 				if (d != 0) {
 					duration += d;
 				} else {
