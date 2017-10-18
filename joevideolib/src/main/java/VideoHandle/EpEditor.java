@@ -123,6 +123,24 @@ public class EpEditor {
 	 * @param outputOption 输出选项配置
 	 */
 	public void merge(List<EpVideo> epVideos, OutputOption outputOption, OnEditorListener onEditorListener) {
+		//检测是否有无音轨视频
+		boolean isNoAudioTrack = false;
+		for (EpVideo epVideo : epVideos) {
+			MediaExtractor mediaExtractor = new MediaExtractor();
+			try {
+				mediaExtractor.setDataSource(epVideo.getVideoPath());
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+			int at = TrackUtils.selectAudioTrack(mediaExtractor);
+			if (at == -1) {
+				isNoAudioTrack = true;
+				mediaExtractor.release();
+				break;
+			}
+			mediaExtractor.release();
+		}
 		//设置默认宽高
 		outputOption.width = outputOption.width == 0 ? DEFAULT_WIDTH : outputOption.width;
 		outputOption.height = outputOption.height == 0 ? DEFAULT_HEIGHT : outputOption.height;
@@ -177,12 +195,20 @@ public class EpEditor {
 			for (int i = 0; i < epVideos.size(); i++) {
 				cmd.append("[outv").append(i).append("]");
 			}
-			cmd.append("concat=n=").append(epVideos.size()).append(":v=1:a=0[outv];");
-			for (int i = 0; i < epVideos.size(); i++) {
-				cmd.append("[").append(i).append(":a]");
+			cmd.append("concat=n=").append(epVideos.size()).append(":v=1:a=0[outv]");
+			//是否添加音轨
+			if (!isNoAudioTrack) {
+				cmd.append(";");
+				for (int i = 0; i < epVideos.size(); i++) {
+					cmd.append("[").append(i).append(":a]");
+				}
+				cmd.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa]");
 			}
-			cmd.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa] -map [outv] -map [outa]")
-					.append(outputOption.getOutputInfo()).append(" -preset superfast ").append(outputOption.outPath);
+			cmd.append(" -map [outv]");
+			if (!isNoAudioTrack) {
+				cmd.append(" -map [outa]");
+			}
+			cmd.append(outputOption.getOutputInfo()).append(" -preset superfast ").append(outputOption.outPath);
 			long duration = 0;
 			for (EpVideo ep : epVideos) {
 				long d = VideoUitls.getDuration(ep.getVideoPath());
@@ -252,6 +278,7 @@ public class EpEditor {
 			return;
 		}
 		int at = TrackUtils.selectAudioTrack(mediaExtractor);
+		mediaExtractor.release();
 		String cmd;
 		if (at == -1) {
 			int vt = TrackUtils.selectVideoTrack(mediaExtractor);
