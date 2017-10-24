@@ -278,7 +278,6 @@ public class EpEditor {
 			return;
 		}
 		int at = TrackUtils.selectAudioTrack(mediaExtractor);
-		mediaExtractor.release();
 		String cmd;
 		if (at == -1) {
 			int vt = TrackUtils.selectVideoTrack(mediaExtractor);
@@ -287,6 +286,7 @@ public class EpEditor {
 		} else {
 			cmd = "-y -i " + videoin + " -i " + audioin + " -filter_complex [0:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + videoVolume + "[a0];[1:a]aformat=sample_fmts=fltp:sample_rates=44100:channel_layouts=stereo,volume=" + audioVolume + "[a1];[a0][a1]amix=inputs=2:duration=first[aout] -map [aout] -ac 2 -c:v copy -map 0:v:0 " + output;
 		}
+		mediaExtractor.release();
 		execCmd(cmd, 0, onEditorListener);
 	}
 
