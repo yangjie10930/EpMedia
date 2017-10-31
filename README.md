@@ -71,20 +71,20 @@ outputOption.height = 360;//输出视频高度
 outputOption.frameRate = 30;//输出视频帧率,默认30
 outputOption.bitRate = 10;//输出视频码率,默认10
 epEditor.exec(epVideo, outputOption, new OnEditorListener() {
-			@Override
-			public void onSuccess() {
-				
-			}
+	@Override
+	public void onSuccess() {
 
-			@Override
-			public void onFailure() {
+	}
 
-			}
-			
-			@Override
-			public void onProgress(float progress) {
-				//这里获取处理进度
-			}
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+		//这里获取处理进度
+	}
 });
 ```
 * 添加背景音乐
@@ -92,20 +92,20 @@ epEditor.exec(epVideo, outputOption, new OnEditorListener() {
 EpEditor epEditor = new EpEditor(this);
 //参数分别是视频路径，音频路径，输出路径,原始视频音量(1为100%,0.7为70%,以此类推),添加音频音量
 epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener() {
-			@Override
-			public void onSuccess() {
-				
-			}
+	@Override
+	public void onSuccess() {
 
-			@Override
-			public void onFailure() {
+	}
 
-			}
-			
-			@Override
-			public void onProgress(float progress) {
-				//这里获取处理进度
-			}
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+		//这里获取处理进度
+	}
 });
 ```
 * 分离音视频
@@ -113,20 +113,20 @@ epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener()
 EpEditor epEditor = new EpEditor(this);
 //参数分别是视频路径，输出路径，输出类型
 epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListener() {
-			@Override
-			public void onSuccess() {
-				
-			}
+	@Override
+	public void onSuccess() {
 
-			@Override
-			public void onFailure() {
+	}
 
-			}
-			
-			@Override
-			public void onProgress(float progress) {
-				//这里获取处理进度
-			}
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+		//这里获取处理进度
+	}
 });
 ```
 ## 多个视频处理&合并
@@ -168,6 +168,27 @@ epVideos.add(new EpVideo(url2));//视频2
 epVideos.add(new EpVideo(url3));//视频3
 EpEditor epEditor = new EpEditor(this);
 epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorListener() {
+	@Override
+	public void onSuccess() {
+
+	}
+
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+			//这里获取处理进度
+	}
+});
+```
+## 自定义命令
+* 输入ffmpeg命令即可（起头不用输ffmpeg,例子"-i input.mp4 -ss 0 -t 5 output.mp4"）
+```Java
+EpEditor epEditor = new EpEditor(this);
+	epEditor.execCmd("", 0, new OnEditorListener() {
 		@Override
 		public void onSuccess() {
 
@@ -177,10 +198,10 @@ epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorLis
 		public void onFailure() {
 
 		}
-		
+
 		@Override
 		public void onProgress(float progress) {
-				//这里获取处理进度
+
 		}
-});
+	});
 ```
