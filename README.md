@@ -5,6 +5,8 @@
 
 目前还在完善和修复一些bug,如果使用中遇到问题请在Issues留言或联系我:yangjie10930@sina.cn。
 
+好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
+
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
 ## 使用方法:
 * build.gradle里添加:
