@@ -185,7 +185,7 @@ epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorLis
 });
 ```
 ## 自定义命令
-* 输入ffmpeg命令即可（起头不用输ffmpeg,例子"-i input.mp4 -ss 0 -t 5 output.mp4"）
+* 输入ffmpeg命令即可（起头不用输ffmpeg,例子"-i input.mp4 -ss 0 -t 5 output.mp4",第二个参数为视频长度，单位微秒，可以填0）
 ```Java
 EpEditor epEditor = new EpEditor(this);
 	epEditor.execCmd("", 0, new OnEditorListener() {
