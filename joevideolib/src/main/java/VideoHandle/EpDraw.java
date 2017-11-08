@@ -14,6 +14,8 @@ public class EpDraw {
 	private float picHeight;//图片的高
 	private boolean isAnimation;//是否是动图
 
+	private String time = "";//起始结束时间
+
 	private String picFilter;//图片滤镜
 
 	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation) {
@@ -23,6 +25,16 @@ public class EpDraw {
 		this.picWidth = picWidth;
 		this.picHeight = picHeight;
 		this.isAnimation = isAnimation;
+	}
+
+	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation,int start,int end) {
+		this.picPath = picPath;
+		this.picX = picX;
+		this.picY = picY;
+		this.picWidth = picWidth;
+		this.picHeight = picHeight;
+		this.isAnimation = isAnimation;
+		time = ":enable=between(t\\," + start + "\\," + end + ")";
 	}
 
 	public String getPicPath() {
@@ -51,6 +63,10 @@ public class EpDraw {
 
 	public String getPicFilter() {
 		return picFilter == null ? "" : (picFilter + ",");
+	}
+
+	public String getTime() {
+		return time;
 	}
 
 	public void setPicFilter(String picFilter) {

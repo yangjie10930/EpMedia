@@ -72,7 +72,8 @@ public class EpEditor {
 				} else {
 					cmd.append("[outo").append(i - 1).append("]").append("[outv").append(i + 1).append("]");
 				}
-				cmd.append("overlay=").append(epDraws.get(i).getPicX()).append(":").append(epDraws.get(i).getPicY());
+				cmd.append("overlay=").append(epDraws.get(i).getPicX()).append(":").append(epDraws.get(i).getPicY())
+						.append(epDraws.get(i).getTime());
 				if (epDraws.get(i).isAnimation()) {
 					cmd.append(":shortest=1");
 				}
@@ -184,7 +185,8 @@ public class EpEditor {
 				for (int j = 0; j < epVideos.get(i).getEpDraws().size(); j++) {
 					cmd.append("[outv").append(i).append("][p").append(i).append("a").append(j).append("]overlay=")
 							.append(epVideos.get(i).getEpDraws().get(j).getPicX()).append(":")
-							.append(epVideos.get(i).getEpDraws().get(j).getPicY());
+							.append(epVideos.get(i).getEpDraws().get(j).getPicY())
+							.append(epVideos.get(i).getEpDraws().get(j).getTime());
 					if (epVideos.get(i).getEpDraws().get(j).isAnimation()) {
 						cmd.append(":shortest=1");
 					}

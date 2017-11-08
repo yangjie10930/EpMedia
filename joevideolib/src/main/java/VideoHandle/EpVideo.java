@@ -173,10 +173,23 @@ public class EpVideo {
 	 * @param y     文字的y坐标
 	 * @param ttf   文字字体的路径
 	 * @param text  添加的文字
+	 * @deprecated 废弃，采用EpText参数
 	 */
+	@Deprecated
 	public EpVideo addText(int x, int y, float size, String color, String ttf, String text) {
 		filter = getFilter();
 		filter.append("drawtext=fontfile=" + ttf + ":fontsize=" + size + ":fontcolor=" + color + ":x=" + x + ":y=" + y + ":text='" + text + "'");
+		return this;
+	}
+
+	/**
+	 * 为视频添加文字(新增可以控制显示周期)
+	 *
+	 * @param epText  添加文字类
+	 */
+	public EpVideo addText(EpText epText) {
+		filter = getFilter();
+		filter.append(epText.getTextFitler());
 		return this;
 	}
 
