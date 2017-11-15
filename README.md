@@ -44,8 +44,9 @@ epVideo.rotation(90,true);
 ```
 * 添加文字
 ```Java
-//参数分别是添加位置的X,Y坐标,文字的字号(单位px),文字颜色,字体文件的路径,内容
+//参数分别是添加位置的X,Y坐标,文字的字号(单位px),文字颜色,字体文件的路径,内容，Time类为显示的起始时间和持续时间
 epVideo.addText(10,10,35,"red",ttfPath,text);
+epVideo.addText(new EpText(10,10,35,"red",ttfPath,text,new EpText.Time(3,5)));
 ```
 * 添加logo
 ```Java
@@ -53,6 +54,8 @@ epVideo.addText(10,10,35,"red",ttfPath,text);
 //参数为图片路径,X,Y,图片的宽,高,是否是动图(仅支持png,jpg,gif图片,如果是gif图片,最后一个参数为true)
 EpDraw epDraw = new EpDraw(filePath,10,10,50,50,false);
 epVideo.addDraw(epDraw);
+或
+epVideo.addDraw(new EpDraw(filePath,10,10,50,50,false,3,5));//最后两个参数为显示的起始时间和持续时间
 ```
 * 添加自定义滤镜
 ```Java
