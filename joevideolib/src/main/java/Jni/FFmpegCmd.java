@@ -33,6 +33,8 @@ public class FFmpegCmd {
 	 */
 	public static native int exec(int argc, String[] argv);
 
+	public static native void exit();
+
 	public static void onExecuted(int ret) {
 		if (listener != null) {
 			if (ret == 0) {
