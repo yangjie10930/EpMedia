@@ -107,7 +107,9 @@ public class EpEditor {
 					isFilter = true;
 				}
 			}
-			cmd.append(filter_complex.toString());
+			if(!filter_complex.toString().equals("")) {
+				cmd.append(filter_complex.toString());
+			}
 		}
 
 		//输出选项
@@ -223,7 +225,9 @@ public class EpEditor {
 				}
 				filter_complex.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa]");
 			}
-			cmd.append(filter_complex.toString());
+			if(!filter_complex.toString().equals("")) {
+				cmd.append(filter_complex.toString());
+			}
 			cmd.append("-map").append("[outv]");
 			if (!isNoAudioTrack) {
 				cmd.append("-map").append("[outa]");
@@ -487,6 +491,9 @@ public class EpEditor {
 	 */
 	public void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);
+		for (String ss:cmds) {
+			Log.v("EpMediaF","cmd:"+ss);
+		}
 		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
 			@Override
 			public void onSuccess() {
