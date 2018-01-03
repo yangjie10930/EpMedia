@@ -1,4 +1,4 @@
-[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.1-blue.svg)](https://github.com/yangjie10930/EpMedia)
+[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.2-blue.svg)](https://github.com/yangjie10930/EpMedia)
 
 # EpMedia
 基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐。</br>
@@ -8,6 +8,10 @@
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
+## 2018/1/3更新内容：
+1.新增变速功能（支持0.25-4倍播放速度调整）</br>
+2.EpEditor的方法改为静态方法</br>
+3.回调线程取消切换回UI线程，现在在子线程中
 ## 使用方法:
 * build.gradle里添加:
 ```Java
@@ -20,7 +24,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.9.1'
+compile 'com.github.yangjie10930:EpMedia:v0.9.2'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -68,14 +72,13 @@ epVideo.addFilter(filter);
 * 处理单个视频
 ```Java
 EpVideo epVideo = new EpVideo(url);
-EpEditor epEditor = new EpEditor(this);
 //输出选项，参数为输出文件路径(目前仅支持mp4格式输出)
 EpEditor.OutputOption outputOption = new EpEditor.OutputOption(outFile);
 outputOption.width = 480;//输出视频宽，如果不设置则为原始视频宽高
 outputOption.height = 360;//输出视频高度
 outputOption.frameRate = 30;//输出视频帧率,默认30
 outputOption.bitRate = 10;//输出视频码率,默认10
-epEditor.exec(epVideo, outputOption, new OnEditorListener() {
+EpEditor.exec(epVideo, outputOption, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
@@ -94,9 +97,8 @@ epEditor.exec(epVideo, outputOption, new OnEditorListener() {
 ```
 * 添加背景音乐
 ```Java
-EpEditor epEditor = new EpEditor(this);
 //参数分别是视频路径，音频路径，输出路径,原始视频音量(1为100%,0.7为70%,以此类推),添加音频音量
-epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener() {
+EpEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
@@ -115,9 +117,8 @@ epEditor.music(videoPath, audioPath, outfilePath, 1, 0.7, new OnEditorListener()
 ```
 * 分离音视频
 ```Java
-EpEditor epEditor = new EpEditor(this);
 //参数分别是视频路径，输出路径，输出类型
-epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListener() {
+EpEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
@@ -134,6 +135,26 @@ epEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListene
 	}
 });
 ```
+* 视频变速
+```Java
+//参数分别是视频路径,输出路径,变速倍率（仅支持0.25-4倍),变速类型(VIDEO-视频(选择VIDEO的话则会屏蔽音频),AUDIO-音频,ALL-视频音频同时变速)
+EpEditor.changePTS(videoPath, outfilePath, 2.0f, EpEditor.PTS.ALL, new OnEditorListener() {
+	@Override
+	public void onSuccess() {
+
+	}
+
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+
+	}
+});
+```
 ## 多个视频处理&合并
 * 合并视频（支持对要合并的视频进行其他处理操作）
 ```Java
@@ -141,14 +162,13 @@ ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
 epVideos.add(new EpVideo(url2));//视频2
 epVideos.add(new EpVideo(url3));//视频3
-EpEditor epEditor = new EpEditor(this);
 //输出选项，参数为输出文件路径(目前仅支持mp4格式输出)
 EpEditor.OutputOption outputOption = new EpEditor.OutputOption(outFile);
 outputOption.width = 480;//输出视频宽，默认480
 outputOption.height = 360;//输出视频高度,默认360
 outputOption.frameRate = 30;//输出视频帧率,默认30
 outputOption.bitRate = 10;//输出视频码率,默认10
-epEditor.merge(epVideos, outputOption, new OnEditorListener() {
+EpEditor.merge(epVideos, outputOption, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
@@ -171,8 +191,7 @@ ArrayList<EpVideo> epVideos = new ArrayList<>();
 epVideos.add(new EpVideo(url));//视频1
 epVideos.add(new EpVideo(url2));//视频2
 epVideos.add(new EpVideo(url3));//视频3
-EpEditor epEditor = new EpEditor(this);
-epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorListener() {
+EpEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
@@ -192,21 +211,20 @@ epEditor.mergeByLc(epVideos, new EpEditor.OutputOption(outFile), new OnEditorLis
 ## 自定义命令
 * 输入ffmpeg命令即可（起头不用输ffmpeg,例子"-i input.mp4 -ss 0 -t 5 output.mp4",第二个参数为视频长度，单位微秒，可以填0）
 ```Java
-EpEditor epEditor = new EpEditor(this);
-	epEditor.execCmd("", 0, new OnEditorListener() {
-		@Override
-		public void onSuccess() {
+EpEditor.execCmd("", 0, new OnEditorListener() {
+	@Override
+	public void onSuccess() {
 
-		}
+	}
 
-		@Override
-		public void onFailure() {
+	@Override
+	public void onFailure() {
 
-		}
+	}
 
-		@Override
-		public void onProgress(float progress) {
+	@Override
+	public void onProgress(float progress) {
 
-		}
-	});
+	}
+});
 ```
