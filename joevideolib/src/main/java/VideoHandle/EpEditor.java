@@ -1,6 +1,7 @@
 package VideoHandle;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -25,14 +26,15 @@ public class EpEditor {
 	private static final int DEFAULT_WIDTH = 480;//默认输出宽度
 	private static final int DEFAULT_HEIGHT = 360;//默认输出高度
 
-	private Context context;
-
 	public enum Format {
 		MP3, MP4
 	}
 
-	public EpEditor(Context context) {
-		this.context = context;
+	public enum PTS {
+		VIDEO, AUDIO, ALL
+	}
+
+	private EpEditor() {
 	}
 
 	/**
@@ -41,7 +43,7 @@ public class EpEditor {
 	 * @param epVideo      需要处理的视频
 	 * @param outputOption 输出选项配置
 	 */
-	public void exec(EpVideo epVideo, OutputOption outputOption, OnEditorListener onEditorListener) {
+	public static void exec(EpVideo epVideo, OutputOption outputOption, OnEditorListener onEditorListener) {
 		boolean isFilter = false;
 		ArrayList<EpDraw> epDraws = epVideo.getEpDraws();
 		//开始处理
@@ -107,7 +109,7 @@ public class EpEditor {
 					isFilter = true;
 				}
 			}
-			if(!filter_complex.toString().equals("")) {
+			if (!filter_complex.toString().equals("")) {
 				cmd.append(filter_complex.toString());
 			}
 		}
@@ -139,7 +141,7 @@ public class EpEditor {
 	 * @param epVideos     需要合并的视频集合
 	 * @param outputOption 输出选项配置
 	 */
-	public void merge(List<EpVideo> epVideos, OutputOption outputOption, OnEditorListener onEditorListener) {
+	public static void merge(List<EpVideo> epVideos, OutputOption outputOption, OnEditorListener onEditorListener) {
 		//检测是否有无音轨视频
 		boolean isNoAudioTrack = false;
 		for (EpVideo epVideo : epVideos) {
@@ -225,7 +227,7 @@ public class EpEditor {
 				}
 				filter_complex.append("concat=n=").append(epVideos.size()).append(":v=0:a=1[outa]");
 			}
-			if(!filter_complex.toString().equals("")) {
+			if (!filter_complex.toString().equals("")) {
 				cmd.append(filter_complex.toString());
 			}
 			cmd.append("-map").append("[outv]");
@@ -259,11 +261,12 @@ public class EpEditor {
 	 * <p>
 	 * 注意：此方法要求视频格式非常严格，需要合并的视频必须分辨率相同，帧率和码率也得相同
 	 *
+	 * @param context          Context
 	 * @param epVideos         需要合并的视频的集合
 	 * @param outputOption     输出选项
 	 * @param onEditorListener 回调监听
 	 */
-	public void mergeByLc(List<EpVideo> epVideos, OutputOption outputOption, final OnEditorListener onEditorListener) {
+	public static void mergeByLc(Context context, List<EpVideo> epVideos, OutputOption outputOption, final OnEditorListener onEditorListener) {
 		String appDir = context.getFilesDir().getAbsolutePath() + "/EpVideos/";
 		String fileName = "ffmpeg_concat.txt";
 		List<String> videos = new ArrayList<>();
@@ -297,7 +300,7 @@ public class EpEditor {
 	 * @param audioVolume      背景音乐音量(例:1.5为150%)
 	 * @param onEditorListener 回调监听
 	 */
-	public void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
+	public static void music(String videoin, String audioin, String output, float videoVolume, float audioVolume, OnEditorListener onEditorListener) {
 		MediaExtractor mediaExtractor = new MediaExtractor();
 		try {
 			mediaExtractor.setDataSource(videoin);
@@ -331,7 +334,7 @@ public class EpEditor {
 	 * @param format           输出类型
 	 * @param onEditorListener 回调监听
 	 */
-	public void demuxer(String videoin, String out, Format format, OnEditorListener onEditorListener) {
+	public static void demuxer(String videoin, String out, Format format, OnEditorListener onEditorListener) {
 		CmdList cmd = new CmdList();
 		cmd.append("ffmpeg").append("-y").append("-i").append(videoin);
 		switch (format) {
@@ -344,6 +347,50 @@ public class EpEditor {
 		}
 		cmd.append(out);
 		execCmd(cmd, 0, onEditorListener);
+	}
+
+	/**
+	 * 音视频变速
+	 *
+	 * @param videoin          音视频文件
+	 * @param out              输出路径
+	 * @param times            倍率（调整范围0.25-4）
+	 * @param pts              加速类型
+	 * @param onEditorListener 回调接口
+	 */
+	public static void changePTS(String videoin, String out, float times, PTS pts, OnEditorListener onEditorListener) {
+		if (times < 0.25f || times > 4.0f) {
+			Log.e("ffmpeg", "times参数错误，播放速率调整范围0.25-4倍");
+			onEditorListener.onFailure();
+			return;
+		}
+		CmdList cmd = new CmdList();
+		cmd.append("ffmpeg").append("-y").append("-i").append(videoin);
+		String t = "atempo=" + times;
+		if (times < 0.5f) {
+			t = "atempo=0.5,atempo=" + (times / 0.5f);
+		} else if (times > 2.0f) {
+			t = "atempo=2.0,atempo=" + (times / 2.0f);
+		}
+		Log.v("ffmpeg", "atempo:" + t);
+		switch (pts) {
+			case VIDEO:
+				cmd.append("-filter_complex").append("[0:v]setpts=" + (1 / times) + "*PTS").append("-an");
+				break;
+			case AUDIO:
+				cmd.append("-filter:a").append(t);
+				break;
+			case ALL:
+				cmd.append("-filter_complex").append("[0:v]setpts=" + (1 / times) + "*PTS[v];[0:a]" + t + "[a]")
+						.append("-map").append("[v]").append("-map").append("[a]");
+				break;
+		}
+		cmd.append("-preset").append("superfast").append(out);
+		long d = VideoUitls.getDuration(videoin);
+		double dd = d / times;
+		long ddd = (long) dd;
+		Log.v("ffmpeg", "JD:" + d + "," + dd + "," + ddd);
+		execCmd(cmd, ddd, onEditorListener);
 	}
 
 
@@ -448,38 +495,23 @@ public class EpEditor {
 	 *
 	 * @param cmd 命令
 	 */
-	public void execCmd(String cmd, long duration, final OnEditorListener onEditorListener) {
+	public static void execCmd(String cmd, long duration, final OnEditorListener onEditorListener) {
 		cmd = "ffmpeg " + cmd;
 		String[] cmds = cmd.split(" ");
 		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
 			@Override
 			public void onSuccess() {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onSuccess();
-					}
-				});
+				onEditorListener.onSuccess();
 			}
 
 			@Override
 			public void onFailure() {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onFailure();
-					}
-				});
+				onEditorListener.onFailure();
 			}
 
 			@Override
 			public void onProgress(final float progress) {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onProgress(progress);
-					}
-				});
+				onEditorListener.onProgress(progress);
 			}
 		});
 	}
@@ -489,40 +521,25 @@ public class EpEditor {
 	 *
 	 * @param cmd 命令
 	 */
-	public void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
+	private static void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);
-		for (String ss:cmds) {
-			Log.v("EpMediaF","cmd:"+ss);
+		for (String ss : cmds) {
+			Log.v("EpMediaF", "cmd:" + ss);
 		}
 		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
 			@Override
 			public void onSuccess() {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onSuccess();
-					}
-				});
+				onEditorListener.onSuccess();
 			}
 
 			@Override
 			public void onFailure() {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onFailure();
-					}
-				});
+				onEditorListener.onFailure();
 			}
 
 			@Override
 			public void onProgress(final float progress) {
-				((Activity) context).runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						onEditorListener.onProgress(progress);
-					}
-				});
+				onEditorListener.onProgress(progress);
 			}
 		});
 	}
