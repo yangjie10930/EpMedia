@@ -350,6 +350,45 @@ public class EpEditor {
 	}
 
 	/**
+	 * 音视频倒放
+	 *
+	 * @param videoin			视频文件
+	 * @param out				输出文件路径
+	 * @param vr				是否视频倒放
+	 * @param ar				是否音频倒放
+	 * @param onEditorListener	回调监听
+	 */
+	public static void reverse(String videoin, String out,boolean vr,boolean ar,OnEditorListener onEditorListener){
+		if(!vr&&!ar){
+			Log.e("ffmpeg", "parameter error");
+			onEditorListener.onFailure();
+			return;
+		}
+		CmdList cmd = new CmdList();
+		cmd.append("ffmpeg").append("-y").append("-i").append(videoin).append("-filter_complex");
+		String filter = "";
+		if(vr){
+			filter += "[0:v]reverse[v];";
+		}
+		if(ar){
+			filter += "[0:a]areverse[a];";
+		}
+		cmd.append(filter.substring(0,filter.length()-1));
+		if(vr){
+			cmd.append("-map").append("[v]");
+		}
+		if(ar){
+			cmd.append("-map").append("[a]");
+		}
+		if(ar&&!vr) {
+			cmd.append("-acodec").append("libmp3lame");
+		}
+		cmd.append("-preset").append("superfast").append(out);
+		long d = VideoUitls.getDuration(videoin);
+		execCmd(cmd, d, onEditorListener);
+	}
+
+	/**
 	 * 音视频变速
 	 *
 	 * @param videoin          音视频文件
@@ -360,7 +399,7 @@ public class EpEditor {
 	 */
 	public static void changePTS(String videoin, String out, float times, PTS pts, OnEditorListener onEditorListener) {
 		if (times < 0.25f || times > 4.0f) {
-			Log.e("ffmpeg", "times参数错误，播放速率调整范围0.25-4倍");
+			Log.e("ffmpeg", "times can only be 0.25 to 4");
 			onEditorListener.onFailure();
 			return;
 		}
@@ -389,7 +428,6 @@ public class EpEditor {
 		long d = VideoUitls.getDuration(videoin);
 		double dd = d / times;
 		long ddd = (long) dd;
-		Log.v("ffmpeg", "JD:" + d + "," + dd + "," + ddd);
 		execCmd(cmd, ddd, onEditorListener);
 	}
 
@@ -493,7 +531,9 @@ public class EpEditor {
 	/**
 	 * 开始处理
 	 *
-	 * @param cmd 命令
+	 * @param cmd				命令
+	 * @param duration			视频时长（单位微秒）
+	 * @param onEditorListener	回调接口
 	 */
 	public static void execCmd(String cmd, long duration, final OnEditorListener onEditorListener) {
 		cmd = "ffmpeg " + cmd;
@@ -519,7 +559,9 @@ public class EpEditor {
 	/**
 	 * 开始处理
 	 *
-	 * @param cmd 命令
+	 * @param cmd				命令
+	 * @param duration			视频时长（单位微秒）
+	 * @param onEditorListener	回调接口
 	 */
 	private static void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);

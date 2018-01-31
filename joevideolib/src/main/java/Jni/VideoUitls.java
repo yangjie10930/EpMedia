@@ -17,7 +17,7 @@ public class VideoUitls {
 	 * 获取视频信息
 	 *
 	 * @param url
-	 * @return
+	 * @return	视频时长（单位微秒）
 	 */
 	public static long getDuration(String url) {
 		try {

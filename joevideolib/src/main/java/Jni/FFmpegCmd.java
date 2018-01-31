@@ -1,11 +1,14 @@
 package Jni;
 
+import android.support.annotation.Keep;
+
 import VideoHandle.OnEditorListener;
 
 /**
  * Created by 杨杰 on 2017/2/14.
  */
 
+@Keep
 public class FFmpegCmd {
 	/**
 	 * 加载所有相关链接库
@@ -31,10 +34,13 @@ public class FFmpegCmd {
 	 * @param argv
 	 * @return
 	 */
+	@Keep
 	public static native int exec(int argc, String[] argv);
 
+	@Keep
 	public static native void exit();
 
+	@Keep
 	public static void onExecuted(int ret) {
 		if (listener != null) {
 			if (ret == 0) {
@@ -44,9 +50,9 @@ public class FFmpegCmd {
 				listener.onFailure();
 			}
 		}
-
 	}
 
+	@Keep
 	public static void onProgress(float progress) {
 		if (listener != null) {
 			if (duration != 0) {
@@ -62,6 +68,7 @@ public class FFmpegCmd {
 	 * @param cmds
 	 * @param listener
 	 */
+	@Keep
 	public static void exec(String[] cmds, long duration, OnEditorListener listener) {
 		FFmpegCmd.listener = listener;
 		FFmpegCmd.duration = duration;
