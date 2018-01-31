@@ -1,13 +1,16 @@
-[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.2-blue.svg)](https://github.com/yangjie10930/EpMedia)
+[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.3-blue.svg)](https://github.com/yangjie10930/EpMedia)
 
 # EpMedia
-基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐。</br>
+基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐,加速减速视频，倒放音视频</br>
 
 目前还在完善和修复一些bug,如果使用中遇到问题请在Issues留言或联系我:yangjie10930@sina.cn。
 
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
+## 2018/1/31更新内容：
+1.新增倒放功能</br>
+2.新增混淆相关配置
 ## 2018/1/3更新内容：
 1.新增变速功能（支持0.25-4倍播放速度调整）</br>
 2.EpEditor的方法改为静态方法</br>
@@ -24,7 +27,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.9.2'
+compile 'com.github.yangjie10930:EpMedia:v0.9.3'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -139,6 +142,26 @@ EpEditor.demuxer(videoPath, outfilePath,EpEditor.Format.MP3, new OnEditorListene
 ```Java
 //参数分别是视频路径,输出路径,变速倍率（仅支持0.25-4倍),变速类型(VIDEO-视频(选择VIDEO的话则会屏蔽音频),AUDIO-音频,ALL-视频音频同时变速)
 EpEditor.changePTS(videoPath, outfilePath, 2.0f, EpEditor.PTS.ALL, new OnEditorListener() {
+	@Override
+	public void onSuccess() {
+
+	}
+
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+
+	}
+});
+```
+* 视频变速
+```Java
+////参数分别是视频路径,输出路径,视频是否倒放，音频是否倒放（两个都选true的话，音视频都倒放，视频ture音频false的话，输出倒放的无音频视频，视频false音频ture的话，输入倒放的音频，音频的倒放也用这个配置）
+EpEditor.reverse(videoPath, outfilePath, true, true, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
