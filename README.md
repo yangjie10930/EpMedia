@@ -1,7 +1,7 @@
 [![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.3-blue.svg)](https://github.com/yangjie10930/EpMedia)
 
 # EpMedia
-基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐,加速减速视频，倒放音视频</br>
+基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐，加速减速视频，倒放音视频。</br>
 
 目前还在完善和修复一些bug,如果使用中遇到问题请在Issues留言或联系我:yangjie10930@sina.cn。
 
