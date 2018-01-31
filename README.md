@@ -158,7 +158,7 @@ EpEditor.changePTS(videoPath, outfilePath, 2.0f, EpEditor.PTS.ALL, new OnEditorL
 	}
 });
 ```
-* 视频变速
+* 音视频倒放
 ```Java
 ////参数分别是视频路径,输出路径,视频是否倒放，音频是否倒放（两个都选true的话，音视频都倒放，视频ture音频false的话，输出倒放的无音频视频，视频false音频ture的话，输入倒放的音频，音频的倒放也用这个配置）
 EpEditor.reverse(videoPath, outfilePath, true, true, new OnEditorListener() {
