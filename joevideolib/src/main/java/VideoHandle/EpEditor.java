@@ -1,7 +1,5 @@
 package VideoHandle;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
@@ -323,7 +321,8 @@ public class EpEditor {
 		}
 		cmd.append(output);
 		mediaExtractor.release();
-		execCmd(cmd, 0, onEditorListener);
+		long d = VideoUitls.getDuration(videoin);
+		execCmd(cmd, d, onEditorListener);
 	}
 
 	/**
@@ -346,7 +345,8 @@ public class EpEditor {
 				break;
 		}
 		cmd.append(out);
-		execCmd(cmd, 0, onEditorListener);
+		long d = VideoUitls.getDuration(videoin);
+		execCmd(cmd, d, onEditorListener);
 	}
 
 	/**
@@ -565,9 +565,11 @@ public class EpEditor {
 	 */
 	private static void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);
+		String cmdLog = "";
 		for (String ss : cmds) {
-			Log.v("EpMediaF", "cmd:" + ss);
+			cmdLog += cmds;
 		}
+		Log.v("EpMediaF", "cmd:" + cmdLog);
 		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
 			@Override
 			public void onSuccess() {
