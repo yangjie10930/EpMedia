@@ -11,8 +11,8 @@
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
 ## 2018/3/2更新内容：
-1.新增HEVC格式解码器,支持4K视频
-2.新增对图片的支持(jpeg,png)
+1.新增HEVC格式解码器,支持4K视频</br>
+2.新增对图片的支持(jpeg,png)</br>
 3.修复部分Bug
 ## 2018/1/31更新内容：
 1.新增倒放功能</br>
