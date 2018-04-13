@@ -1,4 +1,4 @@
-[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.3-blue.svg)](https://github.com/yangjie10930/EpMedia)
+[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.4-blue.svg)](https://github.com/yangjie10930/EpMedia)
 
 # EpMedia
 基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐，加速减速视频，倒放音视频。</br>
@@ -10,6 +10,10 @@
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
+## 2018/3/2更新内容：
+1.新增HEVC格式解码器,支持4K视频</br>
+2.新增对图片的支持(jpeg,png)</br>
+3.修复部分Bug
 ## 2018/1/31更新内容：
 1.新增倒放功能</br>
 2.新增混淆相关配置
@@ -29,7 +33,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.9.3'
+compile 'com.github.yangjie10930:EpMedia:v0.9.4'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
