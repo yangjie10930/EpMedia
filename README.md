@@ -1,4 +1,4 @@
-[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.4-blue.svg)](https://github.com/yangjie10930/EpMedia)
+[![](https://img.shields.io/badge/minSdkVersion-16-green.svg)](https://developer.android.google.cn) [![](https://img.shields.io/badge/FFmpeg-3.3.4-orange.svg)](https://ffmpeg.org/download.html#release_3.3) [![](https://img.shields.io/badge/release-v0.9.5-blue.svg)](https://github.com/yangjie10930/EpMedia)
 
 # EpMedia
 基于FFmpeg开发的视频处理框架，简单易用，体积小，帮助使用者快速实现视频处理功能。包含以下功能：剪辑，裁剪，旋转，镜像，合并，分离，添加LOGO，添加滤镜，添加背景音乐，加速减速视频，倒放音视频。</br>
@@ -10,17 +10,13 @@
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
+## 2018/4/17更新内容：
+1.新增视频转图片功能</br>
+2.新增图片转视频功能</br>
 ## 2018/3/2更新内容：
 1.新增HEVC格式解码器,支持4K视频</br>
 2.新增对图片的支持(jpeg,png)</br>
 3.修复部分Bug
-## 2018/1/31更新内容：
-1.新增倒放功能</br>
-2.新增混淆相关配置
-## 2018/1/3更新内容：
-1.新增变速功能（支持0.25-4倍播放速度调整）</br>
-2.EpEditor的方法改为静态方法</br>
-3.回调接口取消切换回UI线程，现在在子线程中
 ## 使用方法:
 * build.gradle里添加:
 ```Java
@@ -33,7 +29,7 @@ allprojects {
 ```
 * 添加gradle依赖:
 ```Java
-compile 'com.github.yangjie10930:EpMedia:v0.9.4'
+compile 'com.github.yangjie10930:EpMedia:v0.9.5'
 ```
 ## 单个视频处理:
 * 创建待处理视频:
@@ -168,6 +164,46 @@ EpEditor.changePTS(videoPath, outfilePath, 2.0f, EpEditor.PTS.ALL, new OnEditorL
 ```Java
 ////参数分别是视频路径,输出路径,视频是否倒放，音频是否倒放（两个都选true的话，音视频都倒放，视频ture音频false的话，输出倒放的无音频视频，视频false音频ture的话，输入倒放的音频，音频的倒放也用这个配置）
 EpEditor.reverse(videoPath, outfilePath, true, true, new OnEditorListener() {
+	@Override
+	public void onSuccess() {
+
+	}
+
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+
+	}
+});
+```
+* 视频转图片
+```Java
+////参数分别是视频路径,输出路径（路径用集合的形式，比如pic%03d.jpg,支持jpg和png两种图片格式）,输出图片的宽度，输出图片的高度，每秒输出图片数量（2的话就是每秒2张，0.5f的话就是每两秒一张）
+EpEditor.video2pic(videoPath, outfilePath, 720, 1080, 2, new OnEditorListener() {
+	@Override
+	public void onSuccess() {
+
+	}
+
+	@Override
+	public void onFailure() {
+
+	}
+
+	@Override
+	public void onProgress(float progress) {
+
+	}
+});
+```
+* 图片转视频
+```Java
+////参数分别是图片集合路径,输出路径,输出视频的宽度，输出视频的高度，输出视频的帧率
+EpEditor.pic2video(picPath, outfilePath, 480, 320, 30, new OnEditorListener() {
 	@Override
 	public void onSuccess() {
 
