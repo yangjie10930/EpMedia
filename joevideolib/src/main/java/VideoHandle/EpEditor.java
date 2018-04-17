@@ -352,14 +352,14 @@ public class EpEditor {
 	/**
 	 * 音视频倒放
 	 *
-	 * @param videoin			视频文件
-	 * @param out				输出文件路径
-	 * @param vr				是否视频倒放
-	 * @param ar				是否音频倒放
-	 * @param onEditorListener	回调监听
+	 * @param videoin          视频文件
+	 * @param out              输出文件路径
+	 * @param vr               是否视频倒放
+	 * @param ar               是否音频倒放
+	 * @param onEditorListener 回调监听
 	 */
-	public static void reverse(String videoin, String out,boolean vr,boolean ar,OnEditorListener onEditorListener){
-		if(!vr&&!ar){
+	public static void reverse(String videoin, String out, boolean vr, boolean ar, OnEditorListener onEditorListener) {
+		if (!vr && !ar) {
 			Log.e("ffmpeg", "parameter error");
 			onEditorListener.onFailure();
 			return;
@@ -367,20 +367,20 @@ public class EpEditor {
 		CmdList cmd = new CmdList();
 		cmd.append("ffmpeg").append("-y").append("-i").append(videoin).append("-filter_complex");
 		String filter = "";
-		if(vr){
+		if (vr) {
 			filter += "[0:v]reverse[v];";
 		}
-		if(ar){
+		if (ar) {
 			filter += "[0:a]areverse[a];";
 		}
-		cmd.append(filter.substring(0,filter.length()-1));
-		if(vr){
+		cmd.append(filter.substring(0, filter.length() - 1));
+		if (vr) {
 			cmd.append("-map").append("[v]");
 		}
-		if(ar){
+		if (ar) {
 			cmd.append("-map").append("[a]");
 		}
-		if(ar&&!vr) {
+		if (ar && !vr) {
 			cmd.append("-acodec").append("libmp3lame");
 		}
 		cmd.append("-preset").append("superfast").append(out);
@@ -429,6 +429,69 @@ public class EpEditor {
 		double dd = d / times;
 		long ddd = (long) dd;
 		execCmd(cmd, ddd, onEditorListener);
+	}
+
+	/**
+	 * 视频转图片
+	 *
+	 * @param videoin			音视频文件
+	 * @param out				输出路径
+	 * @param w					输出图片宽度
+	 * @param h					输出图片高度
+	 * @param rate				每秒视频生成图片数
+	 * @param onEditorListener	回调接口
+	 */
+	public static void video2pic(String videoin, String out, int w, int h, float rate, OnEditorListener onEditorListener) {
+		if (w <= 0 || h <= 0) {
+			Log.e("ffmpeg", "width and height must greater than 0");
+			onEditorListener.onFailure();
+			return;
+		}
+		if(rate <= 0){
+			Log.e("ffmpeg", "rate must greater than 0");
+			onEditorListener.onFailure();
+			return;
+		}
+		CmdList cmd = new CmdList();
+		cmd.append("ffmpeg").append("-y").append("-i").append(videoin)
+				.append("-r").append(rate).append("-s").append(w+"x"+h).append("-q:v").append(2)
+				.append("-f").append("image2").append("-preset").append("superfast").append(out);
+		long d = VideoUitls.getDuration(videoin);
+		execCmd(cmd, d, onEditorListener);
+	}
+
+	/**
+	 * 图片转视频
+	 *
+	 * @param videoin			视频文件
+	 * @param out				输出路径
+	 * @param w					输出视频宽度
+	 * @param h					输出视频高度
+	 * @param rate				输出视频帧率
+	 * @param onEditorListener	回调接口
+	 */
+	public static void pic2video(String videoin, String out, int w, int h, float rate, OnEditorListener onEditorListener) {
+		if (w < 0 || h < 0) {
+			Log.e("ffmpeg", "width and height must greater than 0");
+			onEditorListener.onFailure();
+			return;
+		}
+		if(rate <= 0){
+			Log.e("ffmpeg", "rate must greater than 0");
+			onEditorListener.onFailure();
+			return;
+		}
+		CmdList cmd = new CmdList();
+		cmd.append("ffmpeg").append("-y").append("-f").append("image2").append("-i").append(videoin)
+				.append("-vcodec").append("libx264")
+				.append("-r").append(rate);
+//				.append("-b").append("10M");
+				if(w > 0 && h > 0) {
+					cmd.append("-s").append(w + "x" + h);
+				}
+		cmd.append(out);
+		long d = VideoUitls.getDuration(videoin);
+		execCmd(cmd, d, onEditorListener);
 	}
 
 
@@ -531,9 +594,9 @@ public class EpEditor {
 	/**
 	 * 开始处理
 	 *
-	 * @param cmd				命令
-	 * @param duration			视频时长（单位微秒）
-	 * @param onEditorListener	回调接口
+	 * @param cmd              命令
+	 * @param duration         视频时长（单位微秒）
+	 * @param onEditorListener 回调接口
 	 */
 	public static void execCmd(String cmd, long duration, final OnEditorListener onEditorListener) {
 		cmd = "ffmpeg " + cmd;
@@ -559,9 +622,9 @@ public class EpEditor {
 	/**
 	 * 开始处理
 	 *
-	 * @param cmd				命令
-	 * @param duration			视频时长（单位微秒）
-	 * @param onEditorListener	回调接口
+	 * @param cmd              命令
+	 * @param duration         视频时长（单位微秒）
+	 * @param onEditorListener 回调接口
 	 */
 	private static void execCmd(CmdList cmd, long duration, final OnEditorListener onEditorListener) {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);
