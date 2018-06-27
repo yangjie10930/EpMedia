@@ -10,13 +10,7 @@
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
 <a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
-## 2018/4/17更新内容：
-1.新增视频转图片功能</br>
-2.新增图片转视频功能</br>
-## 2018/3/2更新内容：
-1.新增HEVC格式解码器,支持4K视频</br>
-2.新增对图片的支持(jpeg,png)</br>
-3.修复部分Bug
+
 ## 使用方法:
 * build.gradle里添加:
 ```Java
