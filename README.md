@@ -9,7 +9,9 @@
 
 好用的话麻烦给个star,感谢您的支持与鼓励O(∩_∩)O
 
-<a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>
+<a href="https://github.com/yangjie10930/EpMediaDemo" target="_blank">Demo点这里</a>   
+
+PS：近期计划修复一些BUG，并整理编译的脚本开源，替换新版本的FFmpeg，再公布一个全格式支持的so库，但是因近期工作繁忙，无暇分身，只能忙过这一阵再来处理，希望能有对音视频有一定了解的朋友来帮助我完善这个库，有意愿的朋友可以联系我，我会提供相应的资源，谢谢！
 
 ## 使用方法:
 * build.gradle里添加:
