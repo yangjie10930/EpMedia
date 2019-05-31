@@ -1,5 +1,7 @@
 package VideoHandle;
 
+import android.support.annotation.IntRange;
+
 /**
  * 添加特效类
  * Created by YangJie on 2017/5/23.
@@ -13,7 +15,7 @@ public class EpDraw {
 	private float picWidth;//图片的宽
 	private float picHeight;//图片的高
 	private boolean isAnimation;//是否是动图
-
+	private int angle=0;//图片的旋转角度
 	private String time = "";//起始结束时间
 
 	private String picFilter;//图片滤镜
@@ -28,13 +30,17 @@ public class EpDraw {
 	}
 
 	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation,int start,int end) {
-		this.picPath = picPath;
-		this.picX = picX;
-		this.picY = picY;
-		this.picWidth = picWidth;
-		this.picHeight = picHeight;
-		this.isAnimation = isAnimation;
+		this(picPath, picX, picY, picWidth, picHeight, isAnimation);
 		time = ":enable=between(t\\," + start + "\\," + end + ")";
+	}
+
+	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation, int start,int end,@IntRange(from = 0,to = 360) int angle) {
+		this(picPath, picX, picY, picWidth, picHeight, isAnimation,start,end);
+		this.angle = angle;
+	}
+
+	public int getAngle() {
+		return angle;
 	}
 
 	public String getPicPath() {

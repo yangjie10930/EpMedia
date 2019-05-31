@@ -69,7 +69,12 @@ public class EpEditor {
 					.append(outputOption.width == 0 ? "" : ",setdar=" + outputOption.getSar()).append("[outv0];");
 			for (int i = 0; i < epDraws.size(); i++) {
 				filter_complex.append("[").append(i + 1).append(":0]").append(epDraws.get(i).getPicFilter()).append("scale=").append(epDraws.get(i).getPicWidth()).append(":")
-						.append(epDraws.get(i).getPicHeight()).append("[outv").append(i + 1).append("];");
+						.append(epDraws.get(i).getPicHeight());
+				int angle = epDraws.get(i).getAngle();
+				if(angle >0) {
+					filter_complex.append("[rotate").append(i + 1).append("]").append(";[rotate").append(i + 1).append("]").append("rotate='").append(angle).append("*PI/180:ow=hypot(iw,ih):oh=hypot(iw,ih)':c=none");
+				}
+				filter_complex.append("[outv").append(i + 1).append("];");
 			}
 			for (int i = 0; i < epDraws.size(); i++) {
 				if (i == 0) {
@@ -486,9 +491,9 @@ public class EpEditor {
 				.append("-vcodec").append("libx264")
 				.append("-r").append(rate);
 //				.append("-b").append("10M");
-				if(w > 0 && h > 0) {
-					cmd.append("-s").append(w + "x" + h);
-				}
+		if(w > 0 && h > 0) {
+			cmd.append("-s").append(w + "x" + h);
+		}
 		cmd.append(out);
 		long d = VideoUitls.getDuration(videoin);
 		execCmd(cmd, d, onEditorListener);
@@ -630,7 +635,7 @@ public class EpEditor {
 		String[] cmds = cmd.toArray(new String[cmd.size()]);
 		String cmdLog = "";
 		for (String ss : cmds) {
-			cmdLog += cmds;
+			cmdLog += ss+" ";
 		}
 		Log.v("EpMediaF", "cmd:" + cmdLog);
 		FFmpegCmd.exec(cmds, duration, new OnEditorListener() {
