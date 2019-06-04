@@ -71,8 +71,16 @@ public class EpEditor {
 				filter_complex.append("[").append(i + 1).append(":0]").append(epDraws.get(i).getPicFilter()).append("scale=").append(epDraws.get(i).getPicWidth()).append(":")
 						.append(epDraws.get(i).getPicHeight());
 				int angle = epDraws.get(i).getAngle();
+				float alpha = epDraws.get(i).getAlpha();
+				boolean isVerticalFlip = epDraws.get(i).isVerticalFlip();
 				if(angle >0) {
 					filter_complex.append("[rotate").append(i + 1).append("]").append(";[rotate").append(i + 1).append("]").append("rotate='").append(angle).append("*PI/180:ow=hypot(iw,ih):oh=hypot(iw,ih)':c=none");
+				}
+				if (alpha!=-1){
+					filter_complex.append("[alpha").append(i+1).append("]").append(";[alpha").append(i+1).append("]").append("lut=a=val*").append(alpha);
+				}
+				if (isVerticalFlip){
+					filter_complex.append("[vflip").append(i+1).append("]").append(";[vflip").append(i+1).append("]").append("hflip");
 				}
 				filter_complex.append("[outv").append(i + 1).append("];");
 			}
@@ -127,6 +135,7 @@ public class EpEditor {
 		} else {
 			cmd.append("-preset");
 			cmd.append("superfast");
+
 		}
 		cmd.append(outputOption.outPath);
 		long duration = VideoUitls.getDuration(epVideo.getVideoPath());

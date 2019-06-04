@@ -1,5 +1,6 @@
 package VideoHandle;
 
+import android.support.annotation.FloatRange;
 import android.support.annotation.IntRange;
 
 /**
@@ -15,9 +16,10 @@ public class EpDraw {
 	private float picWidth;//图片的宽
 	private float picHeight;//图片的高
 	private boolean isAnimation;//是否是动图
-	private int angle=0;//图片的旋转角度
+	private int angle = 0;//图片的旋转角度
 	private String time = "";//起始结束时间
-
+	private float alpha = -1;
+	private boolean isVerticalFlip;
 	private String picFilter;//图片滤镜
 
 	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation) {
@@ -29,14 +31,25 @@ public class EpDraw {
 		this.isAnimation = isAnimation;
 	}
 
-	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation,int start,int end) {
+	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation, int start, int end) {
 		this(picPath, picX, picY, picWidth, picHeight, isAnimation);
 		time = ":enable=between(t\\," + start + "\\," + end + ")";
 	}
 
-	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation, int start,int end,@IntRange(from = 0,to = 360) int angle) {
-		this(picPath, picX, picY, picWidth, picHeight, isAnimation,start,end);
+	public EpDraw(String picPath, int picX, int picY, float picWidth, float picHeight, boolean isAnimation, int start, int end, @IntRange(from = 0, to = 360) int angle, @FloatRange(from = 0.0, to = 1.0) float alpha, boolean isVerticalFlip) {
+
+		this(picPath, picX, picY, picWidth, picHeight, isAnimation, start, end);
 		this.angle = angle;
+		this.alpha = alpha;
+		this.isVerticalFlip = isVerticalFlip;
+	}
+
+	public boolean isVerticalFlip() {
+		return isVerticalFlip;
+	}
+
+	public float getAlpha() {
+		return alpha;
 	}
 
 	public int getAngle() {
@@ -71,11 +84,11 @@ public class EpDraw {
 		return picFilter == null ? "" : (picFilter + ",");
 	}
 
-	public String getTime() {
-		return time;
-	}
-
 	public void setPicFilter(String picFilter) {
 		this.picFilter = picFilter;
+	}
+
+	public String getTime() {
+		return time;
 	}
 }
