@@ -1,6 +1,7 @@
 package Jni;
 
 import android.support.annotation.Keep;
+import android.support.annotation.VisibleForTesting;
 
 import VideoHandle.OnEditorListener;
 
@@ -21,7 +22,7 @@ public class FFmpegCmd {
 		System.loadLibrary("swscale");
 		System.loadLibrary("avfilter");
 		System.loadLibrary("avdevice");
-		System.loadLibrary("ffmpeg");
+		System.loadLibrary("ffmpeg-exec");
 	}
 
 	private static OnEditorListener listener;
@@ -38,6 +39,7 @@ public class FFmpegCmd {
 	public static native int exec(int argc, String[] argv);
 
 	@Keep
+	@VisibleForTesting
 	public static native void exit();
 
 	@Keep

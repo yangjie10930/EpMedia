@@ -10,6 +10,9 @@ import android.util.Log;
 
 public class TrackUtils {
 
+	private TrackUtils() {
+	}
+
 	private static final String TAG = "TrackUtils";
 
 	/**

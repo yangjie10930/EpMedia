@@ -265,7 +265,7 @@ public class EpEditor {
 	 * @param onEditorListener 回调监听
 	 */
 	public static void mergeByLc(Context context, List<EpVideo> epVideos, OutputOption outputOption, final OnEditorListener onEditorListener) {
-		String appDir = context.getFilesDir().getAbsolutePath() + "/EpVideos/";
+		String appDir = context.getCacheDir().getAbsolutePath() + "/EpVideos/";
 		String fileName = "ffmpeg_concat.txt";
 		List<String> videos = new ArrayList<>();
 		for (EpVideo e : epVideos) {
