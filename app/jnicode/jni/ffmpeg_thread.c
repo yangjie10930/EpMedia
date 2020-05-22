@@ -1,6 +1,7 @@
-#include "libavcodec/avcodec.h"
+//
+// Created by YANGJIE8 on 2020/5/22.
+//
 #include "ffmpeg_thread.h"
-#include "android_log.h"
 
 pthread_t ntid;
 char **argvs = NULL;
@@ -22,10 +23,9 @@ int ffmpeg_thread_run_cmd(int cmdnum,char **argv){
     int temp =pthread_create(&ntid,NULL,thread,NULL);
     if(temp!=0)
     {
-        LOGE("can't create thread: %s ",strerror(temp));
+        //LOGE("can't create thread: %s ",strerror(temp));
         return 1;
     }
-    LOGI("create thread succes: %s ",strerror(temp));
     return 0;
 }
 
@@ -36,7 +36,6 @@ static void (*ffmpeg_callback)(int ret);
 void ffmpeg_thread_callback(void (*cb)(int ret)){
     ffmpeg_callback = cb;
 }
-
 /**
  * 退出线程
  */
@@ -47,10 +46,7 @@ void ffmpeg_thread_exit(int ret){
     pthread_exit("ffmpeg_thread_exit");
 }
 
-/**
- * 取消线程
- */
-void ffmpeg_thread_cancel(){
-    void *ret=NULL;
-    pthread_join(ntid, &ret);
+int ffmpeg_thread_cancel(){
+    return -1;
 }
+

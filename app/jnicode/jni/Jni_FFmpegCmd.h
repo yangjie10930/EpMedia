@@ -15,7 +15,7 @@ extern "C" {
 JNIEXPORT jint JNICALL Java_Jni_FFmpegCmd_exec
   (JNIEnv *, jclass, jint, jobjectArray);
 
-JNIEXPORT void JNICALL Java_Jni_FFmpegCmd_exit
+JNIEXPORT jint JNICALL Java_Jni_FFmpegCmd_exit
   (JNIEnv *, jclass);
 
 #ifdef __cplusplus
