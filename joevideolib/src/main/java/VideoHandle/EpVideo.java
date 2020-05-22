@@ -184,10 +184,11 @@ public class EpVideo {
 
 	/**
 	 * 为视频添加文字(新增可以控制显示周期)
+	 * v1.0.0版本里暂停使用此方法
 	 *
 	 * @param epText  添加文字类
 	 */
-	public EpVideo addText(EpText epText) {
+	private EpVideo addText(EpText epText) {
 		filter = getFilter();
 		filter.append(epText.getTextFitler());
 		return this;
