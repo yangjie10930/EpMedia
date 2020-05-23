@@ -48,8 +48,10 @@ public class FFmpegCmd {
 			if (ret == 0) {
 				listener.onProgress(1);
 				listener.onSuccess();
+				listener = null;
 			} else {
 				listener.onFailure();
+				listener = null;
 			}
 		}
 	}
