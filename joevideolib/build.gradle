@@ -10,7 +10,7 @@ android {
         versionCode 1
         versionName "1.1"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
 
         ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86_64"
@@ -33,5 +33,5 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api 'com.android.support:support-annotations:25.1.1'
+    api 'androidx.annotation:annotation:1.2.0'
 }
