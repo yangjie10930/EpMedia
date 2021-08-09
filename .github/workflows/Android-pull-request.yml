@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  Build:
+    name: Build on JDK ${{ matrix.java_version }}
+    runs-on: macOS-latest
+    strategy:
+      matrix:
+        java_version: [ 11 ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: ${{ matrix.java_version }}
+      - name: Install Android SDK
+        uses: malinskiy/action-android/install-sdk@release/0.1.2
+      - name: Build project
+        run: ./gradlew assemble
+  Check:
+    name: Check
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Install JDK ${{ matrix.java_version }}
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: 11
+      - name: Install Android SDK
+        uses: malinskiy/action-android/install-sdk@release/0.1.2
+      - name: Build project
+        run: ./gradlew check
+      - name: Archive Lint report
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: Lint-report
+          path: joevideolib/build/reports/lint-results.html
