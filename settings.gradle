@@ -1,1 +1,3 @@
-include ':app', ':joevideolib'
+include ':app-jni'
+include ':app'
+include ':joevideolib'
